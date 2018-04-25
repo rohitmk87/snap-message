@@ -1,0 +1,3 @@
+keyspace : jcp_account
+
+host: localhost

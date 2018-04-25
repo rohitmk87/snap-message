@@ -1,0 +1,139 @@
+/*
+ * Copyright (c) 2016 JCPenney Co. All rights reserved.
+ */
+
+buildscript {
+    repositories {
+        mavenLocal()
+        maven { url "$nexusUrl/content/groups/public/" }
+    }
+
+    dependencies {
+        // TODO replace version with property value
+        classpath group: 'org.springframework.boot', name: 'spring-boot-gradle-plugin', version: '1.3.3.RELEASE'
+        classpath group: 'com.smokejumperit.gradle.license', name: 'Gradle-License-Report', version: '0.0.2'
+        classpath 'com.bmuschko:gradle-clover-plugin:2.0.1'
+        classpath 'no.nils:wsdl2java:0.10'
+    }
+}
+
+apply plugin: 'idea'
+apply plugin: 'eclipse'
+
+ext.libraries = [
+        'spring-annotations'                   : [
+                [group: 'org.springframework', name: 'spring-context', version: properties.'spring-framework.version']
+        ],
+        'spring-boot'                          : [
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-web'],
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-actuator'],
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-security'],
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-log4j2'],
+                [group: 'org.springframework.cloud', name: 'spring-cloud-starter-security'],
+                [group: 'org.springframework.cloud', name: 'spring-cloud-starter-oauth2']
+        ],
+        'spring-boot-testing'                  : [
+                [group: 'org.springframework.boot', name: 'spring-boot'],
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-test']
+        ],
+        'spring-cloud-config-client'           : [
+                [group: 'org.springframework.cloud', name: 'spring-cloud-config-client'],
+                [group: 'org.springframework.boot', name: 'spring-boot-starter-aop'],
+                [group: 'org.springframework.retry', name: 'spring-retry']
+        ],
+        'spring-cloud-bus'                     : [
+                [group: 'org.springframework.cloud', name: 'spring-cloud-starter-bus-amqp']
+        ],
+
+        'spring-cassandra'                     : [group: 'org.springframework.boot', name: 'spring-boot-starter-data-cassandra']
+]
+
+subprojects {
+
+
+    apply plugin: 'java'
+    apply plugin: 'idea'
+    apply plugin: 'maven'
+    apply plugin: 'checkstyle'
+    apply plugin: 'license-report'
+
+    sourceCompatibility = 1.8
+
+    install.dependsOn assemble
+    uploadArchives.dependsOn assemble
+
+    repositories {
+        mavenLocal()
+        maven { url "$nexusUrl/content/groups/public/" }
+    }
+
+    configurations {
+        testArtifact.extendsFrom testRuntime
+        compile.exclude group: 'org.springframework.boot', module: 'spring-boot-starter-logging'
+        compile.exclude group: 'javax.ws.rs', module: 'jsr311-api'
+    }
+
+    task testJar(type: Jar) {
+        classifier "test"
+        from sourceSets.test.output
+    }
+
+    artifacts {
+        testArtifact testJar
+    }
+
+    test {
+        testLogging {
+            events 'skipped', 'passed'
+        }
+    }
+
+    checkstyle {
+        configFile = file("${project.rootProject.projectDir}/gradle/config/checkstyle/checkstyle.xml")
+        toolVersion = '6.16.1'
+    }
+
+    checkstyleTest.enabled = false;
+
+
+    idea {
+        module {
+            downloadJavadoc = true
+            downloadSources = true
+        }
+    }
+
+    task reportLicenses(type: Copy, dependsOn: [assemble, dependencyLicenseReport]) {
+        from file("${project.buildDir}/reports/dependency-license")
+        into file("${project.rootProject.buildDir}/reports/license/${project.rootProject.name}/${project.name}")
+    }
+
+}
+
+task prepareLicenseReport(type: Exec) {
+    //on linux
+    commandLine "${projectDir.path}/create_dependency.sh"
+    args "${project.buildDir}/reports/license/"
+}
+
+task createLicenseReport(type: Zip, dependsOn: prepareLicenseReport) {
+    baseName = "${project.name}"
+    destinationDir = file("${project.buildDir}")
+    archiveName = "license-${project.name}-${project.version}.zip"
+    from("${project.buildDir}/reports/license")
+    include "${project.name}/**/*"
+    include "report.html"
+}
+
+task assemble {
+    dependsOn createLicenseReport
+}
+
+gradle.afterProject { project, projectState ->
+    if (project.tasks.findAll { it.name == 'reportLicenses' }) {
+        prepareLicenseReport.dependsOn(project.reportLicenses)
+    }
+}
+
+task reportLicenses << {
+}

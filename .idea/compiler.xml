@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile default="true" name="Default" enabled="true" />
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="order-manage-rs_main" target="1.8" />
+      <module name="order-manage-rs_test" target="1.8" />
+      <module name="snap-message-rs_main" target="1.8" />
+      <module name="snap-message-rs_test" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

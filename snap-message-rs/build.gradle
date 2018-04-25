@@ -1,0 +1,38 @@
+/*
+ * Copyright (c) 2016 JCPenney Co. All rights reserved.
+ */
+
+
+apply plugin: 'spring-boot'
+apply plugin: 'no.nils.wsdl2java'
+
+dependencyManagement {
+    imports {
+        mavenBom "org.springframework.cloud:spring-cloud-dependencies:Brixton.RELEASE"
+    }
+}
+
+dependencies {
+
+    compile([
+            libraries.'spring-cassandra',
+            libraries.'spring-boot',
+            libraries.'spring-cloud-config-client',
+            libraries.'spring-cloud-bus',
+    ])
+    compile "org.projectlombok:lombok:1.16.20"
+
+}
+
+checkstyleMain.source = ["src/main/java"]
+
+clean.delete { "${projectDir}/generatedsources" }
+
+jar {
+    baseName = 'snap-message'
+}
+
+bootRepackage {
+    ext.outputFile = file(jar.archivePath.getPath().replaceFirst(/\.jar$/, '.boot.jar'))
+    outputFile = ext.outputFile
+}
