@@ -10,6 +10,10 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 
+
+/**
+ * Service layer to connect to Dao Layer
+ */
 @Service
 @Slf4j
 public class SnapService {

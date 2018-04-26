@@ -7,6 +7,9 @@ import com.datastax.driver.core.utils.UUIDs;
 import java.util.Base64;
 import java.util.UUID;
 
+/**
+ * Generate timebased random id
+ */
 @Component
 public class IdGeneration {
 

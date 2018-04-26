@@ -18,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+/**
+ * Controller: Incoming request for all services
+ */
 @RestController
 @RequestMapping(value = "/")
 public class SnapResource {
@@ -27,6 +30,11 @@ public class SnapResource {
   @Autowired
   SnapService snapService;
 
+  /**
+   * POST: input texts and save in storage
+   * input: requestDto
+   * output: messageDto
+   */
   @RequestMapping(value = "/chat", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_VALUE,
       consumes = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MessageDto> postMessage(@RequestBody RequestDto requestDto) {
@@ -40,6 +48,11 @@ public class SnapResource {
     return new ResponseEntity<MessageDto>(messageDto, HttpStatus.CREATED);
   }
 
+  /**
+   * GET: text against the id from C*
+   * input: id
+   * ouput: messageDto
+   */
   @RequestMapping(value = "/chat/{id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<MessageDto> getMessage(@PathVariable String id) {
 
@@ -50,6 +63,11 @@ public class SnapResource {
     return new ResponseEntity<MessageDto>(messageDto, HttpStatus.OK);
   }
 
+  /**
+   * GET: text against the id from C*
+   * input: username
+   * ouput: list of chatDto
+   */
   @RequestMapping(value = "/chats/{username}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
   public ResponseEntity<List<ChatsDto>> getUserTexts(@PathVariable String username) {
 

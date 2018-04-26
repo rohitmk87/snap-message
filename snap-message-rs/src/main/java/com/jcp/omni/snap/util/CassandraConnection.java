@@ -10,6 +10,9 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.Collection;
 
+/**
+ * Establish connection to Cassandra
+ */
 @Service
 public class CassandraConnection {
   public com.datastax.driver.core.Session createConnection(String cassNode1, String jcp_account)

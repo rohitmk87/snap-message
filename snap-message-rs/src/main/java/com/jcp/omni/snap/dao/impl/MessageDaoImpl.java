@@ -22,10 +22,12 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-
+/**
+ * Dao to connect to query Cassandra
+ */
 @Service
 @Slf4j
-public class MessageDaoImpl implements MessageDao{
+public class MessageDaoImpl implements MessageDao {
 
   @Autowired
   CassandraConnection cassandraConnection;
@@ -39,7 +41,12 @@ public class MessageDaoImpl implements MessageDao{
   @Value("${host}")
   String cassNode1;
 
-  //insert text
+  /*
+    Method insertNewText
+    Parameters: RequestDto
+    Output: String (id)
+    Description: /chat
+  */
   public String insertNewText(RequestDto requestDto) {
     List<ChatsDto> chatsDtoList = new ArrayList<ChatsDto>();
     String userName = requestDto.getUsername();
@@ -98,7 +105,12 @@ public class MessageDaoImpl implements MessageDao{
     return id;
   }
 
-  //Query by Id
+  /*
+    Method queryById
+    Parameters: id
+    Output: MessageDto
+    Description: /chat/{id}
+  */
   public MessageDto queryById(String id) {
     MessageDto messageDto = new MessageDto();
     try {
@@ -160,7 +172,12 @@ public class MessageDaoImpl implements MessageDao{
     return messageDto;
   }
 
-  //get list of text with input = username
+  /*
+    Method queryByUser
+    Parameters: userName
+    Output: List<ChatsDto>
+    Description: /chats/{username}
+  */
   public List<ChatsDto> queryByUser(String userName) {
     List<ChatsDto> chatsDtoList = new ArrayList<ChatsDto>();
     try {
