@@ -12,5 +12,5 @@ import lombok.NoArgsConstructor;
 public class RequestDto {
   private String username;
   private String text;
-  private String timeout;
+  private int timeout;
 }

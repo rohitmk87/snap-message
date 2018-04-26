@@ -44,7 +44,7 @@ public class MessageDaoImpl implements MessageDao{
     List<ChatsDto> chatsDtoList = new ArrayList<ChatsDto>();
     String userName = requestDto.getUsername();
     String text = requestDto.getText();
-    String ttl = requestDto.getTimeout();
+    String ttl = Integer.toString(requestDto.getTimeout());
     String id = idGeneration.generateUniqueId();
     try {
 

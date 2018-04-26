@@ -44,7 +44,7 @@ Request
 {
 	"username" : "rkamble",
 	"text" : "This is my id6",
-	"timeout" : "60"
+	"timeout" : 60
 }
 
 Response: Status Code: 201 Created
