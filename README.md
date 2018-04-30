@@ -87,5 +87,5 @@ Applciation Server: Spring Boot comes inbuilt with Tomcat server. The gradle bui
 Development tools: Idea IntelliJ, Postman rest client, DataStax DSE (which comes with casssandra), Postman rest client. 
 
 Limitation and Improvemnt: It is not best practice to update a resource during GET call as I am doing above to move COLD state. Solution for this is to setup batch jobs to check if the texts have met the ttl and expired, then move those texts to COLD state. 
-
+Alternate Design Approach: Maintain 3 tables: 1) Meesage_by_user same as above. 2) Instead of Messages table(above) which includes both HOT and COLD storage entries, maintain 2 separate tables as HOT and COLD storage with same other fields. And have Cassandra Insert ttl only on HOT storage table. This way, entries from HOT storage table will expire(hence deleted) after the set ttl for each record is achieved and COLD storage will maintain all the records forever.
 
